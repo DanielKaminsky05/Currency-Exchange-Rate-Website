@@ -19,7 +19,6 @@ app.get("/", async (req,res) => {
     const response = await axios.get("https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/usd.min.json");
     const data = response.data;
     const currency = Object.keys(data)[1];
-    console.log(currency);
     var keys =  Object.keys(data[currency]);
     keys.forEach(element => {
         if (!(fiatCurrencyTickers.includes(element))) {
@@ -29,9 +28,30 @@ app.get("/", async (req,res) => {
     res.render("index.ejs", {data : data});
 })
 
-app.get("/currency", async (req, res) => {
-    var basecurrency = req.body.currency;
+app.post("/currency", async (req, res) => {
     console.log(req.body);
+
+    var basecurrency = req.body.currency;
+    var date = req.body.date;
+    basecurrency = basecurrency.toLowerCase();
+    try {
+
+        const response = await axios.get(`https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@${date}/v1/currencies/${basecurrency}.min.json`);
+        var data = response.data;
+        const currency = Object.keys(data)[1];
+        var keys =  Object.keys(data[currency]);
+        keys.forEach(element => {
+            if (!(fiatCurrencyTickers.includes(element))) {
+                delete data[currency][element];
+            }
+        }); 
+        res.render("index.ejs", {data : data});
+    }
+
+    catch(error) {
+        res.render("index.ejs", {error : error});
+    }
+   
 });
 
 

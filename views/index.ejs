@@ -9,23 +9,50 @@
 <body>
     <div class="container">
 
+    <% if (locals.error) { %>
+        
+        <h1 class = "error">Error, you sent an invalid input</h1>
 
+        
+        <form action="/currency" class="select-currency-date" method = "POST">
+            <div>
+                <label for="currency">Type in Base Currency:</label>
+                <input type="text" id = "currency" name = "currency" >
+            </div>
+            <div>
+                <label for="date">Type in Date:</label>
+                <input type="text" name = "date" >
+            </div>
+        
 
-    <% var currency = Object.keys(data)[1] %>
+            <button id = "submit-button" input = "submit">Submit</button>
+        </form>       
+
+    <% } else { %>
+        
+    
+        
+        <% var currency = Object.keys(data)[1] %>
+   
         <div class="">
             <h1 class = "title">World Wide Currency Exchange Rate</h1>
-                    <div class="flex-container">
-                        <form action="/currency" class="select-currency" method = "GET">
-                            <label for="currency">Type in Base Currency:</label>
-                            <input type="text" id = "currency" name = "currency" placeholder= <%= currency.toUpperCase() %>>
-                        </form>
+                 
+            <form action="/currency" class="select-currency-date" method = "POST">
+                <div>
+                    <label for="currency">Type in Base Currency:</label>
+                    <input type="text" id = "currency" name = "currency" value = <%= currency.toUpperCase() %>>
+                </div>
+                <div>
+                    <label for="date">Type in Date:</label>
+                    <input type="text" name = "date" value = <%= data.date %>>
+                </div>
+            
 
-                        <form action="" class="select-date">
-                            <label for="date">Type in Date:</label>
-                            <input type="text" placeholder= <%= data.date %>>
-                        </form>
+                <button input = "submit">Submit</button>
+            </form>       
 
-                    </div>
+                    
+                          
                     <h2 class = "date">Date: <%= data.date %></h2>
                 
                     <h2 class="currency">Base Currency: <%= currency.toUpperCase() %></h2>
@@ -33,17 +60,20 @@
                 </div>
         
         <section class= "currency-grid">
-        
-                <% for (const key in data.usd)  { %>
-                    <p class = "currencies"> <%= key.toUpperCase() %>: <%= data[currency][key] %></p>
+                
+                <% for (const key in data[currency])  { %>
+                    <p class = "currencies" > <%= key.toUpperCase() %>: <%= data[currency][key] %></p>
             <% } %>  
             </ul>
         </section>
 
     </div>
     
-
+    <% } %>
     
     
 </body>
+
+
+
 </html>
